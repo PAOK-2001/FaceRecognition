@@ -70,7 +70,7 @@ int main(){
     // create the vectors to train model
     vector<Mat> images;
     vector<int> labels;
-    string src = "data.csv";
+    string src = "/home/paok/Documents/FaceRecognition/Trainer_auxfiles/data.csv";
     trainerfromCSV(src,labels,images);
     cout<< images.size()<<endl;
     int train_width = images[0].cols;
@@ -80,7 +80,7 @@ int main(){
     
     // Load Haar Cacade data for faces
     CascadeClassifier faces_haar;
-    faces_haar.load("/home/paok/Documents/FaceRecognition/haarcascade_frontalface_alt2.xml");
+    faces_haar.load("/home/paok/Documents/FaceRecognition/Trainer_auxfiles/haarcascade_frontalface_alt2.xml");
     // Create OpenCV frame object to store frame information
     Mat frame;
     // Create VideoCapture object, reading video device (USB camera)
