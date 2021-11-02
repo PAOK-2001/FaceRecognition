@@ -7,10 +7,9 @@ img_directory= "/home/paok/Documents/FaceRecognition/trainImages"
 #create a list with file names in image directory
 pictures = listdir(img_directory)
 #Iterate through file anme list and add to csv file
-for i in range(len(pictures)):
-    for pic in pictures:
-        # Format text for CSV file: directory/target/file_name/#number
-        # sample: /home/paok/Documents/FaceRecognition/trainImages/target/IMG2.jpg;0
-        out_put = img_directory+"/target/"+pic+";"+str(i)
-        csv_file.write(out_put)
-        csv_file.write("\n")
+for pic in pictures:
+    # Format text for CSV file: directory/target/file_name/#number
+    # sample: /home/paok/Documents/FaceRecognition/trainImages/target/IMG2.jpg;0
+    out_put = img_directory+"/target/"+pic+";"+str(0)
+    csv_file.write(out_put)
+    csv_file.write("\n")
