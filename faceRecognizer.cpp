@@ -62,7 +62,7 @@ void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
             rectangle(frame,realArea, red,6);
             imshow("Detector", frame);
         }else{
-            string prediction = format("Hello Brandon!!!");
+            string prediction = format("Hello Brandonk!!!");
             putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,0), 4);
             rectangle(frame,realArea, Scalar(0,255,0),6);
             imshow("Detector", frame);

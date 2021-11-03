@@ -37,9 +37,12 @@ void haar_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
 int main() {
     // Load Haar Cacade data for faces
     string folder;
+    int start;
     cout<< "ID de sujeto:  ";
     cin>> folder;
-    int total = 0;
+    cout<<"\n" <<"Start:  ";
+    cin>> start;
+    int total = start+1;
     CascadeClassifier faces_haar;
     faces_haar.load("/home/paok/Documents/OpenCV_Practice/FaceIdentifier/haarcascade_frontalface_alt2.xml");
     // Create OpenCV frame object to store frame information
@@ -61,7 +64,7 @@ int main() {
         }
         haar_detect(frame,faces_haar,facesID,1.5,total,folder);
         // Read key board input, setting esc as break key
-        if(waitKey(550)== 27 || total>=68){
+        if(waitKey(550)== 27 || total>=68+start){
             break;
         }
         cout<<"Faces registered "<<total<<"\n";
