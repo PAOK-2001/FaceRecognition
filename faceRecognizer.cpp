@@ -56,13 +56,13 @@ void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
         Mat predict;
         resize(face, predict, Size(modelwidth, modelheigh), 1.0, 1.0, INTER_CUBIC);
         int id = model->predict(predict);
-        if(id!=0){
+        if(id!=2){
             string prediction = format("Not target!");
             putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,0,255), 4);
             rectangle(frame,realArea, red,6);
             imshow("Detector", frame);
         }else{
-            string prediction = format("Hello Pablo!!!");
+            string prediction = format("Hello Brandon!!!");
             putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,0), 4);
             rectangle(frame,realArea, Scalar(0,255,0),6);
             imshow("Detector", frame);
@@ -100,7 +100,7 @@ int main(){
             cout<<"NULL frame ";
             break;
         }
-        face_detect(frame,faces_haar,facesID,3.8,model,train_width,train_height);
+        face_detect(frame,faces_haar,facesID,1.8,model,train_width,train_height);
         // Read key board input, setting esc as break key
         if(waitKey(5)== 27){
             break;
