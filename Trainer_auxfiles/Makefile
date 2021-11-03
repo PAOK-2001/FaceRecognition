@@ -1,5 +1,5 @@
 CC = g++
-PROJECT = trainer
+PROJECT = capture
 SRC = trainerCapture.cpp
 LIBS = `pkg-config --cflags --libs opencv4`
 $(PROJECT) : $(SRC)

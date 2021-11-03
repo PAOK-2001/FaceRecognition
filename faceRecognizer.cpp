@@ -75,16 +75,10 @@ void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
     }
 }
 int main(){
-    // create the vectors to train model
-    vector<Mat> images;
-    vector<int> labels;
-    string src = "/home/paok/Documents/FaceRecognition/Trainer_auxfiles/data.csv";
-    trainerfromCSV(src,labels,images);
-    cout<<"Images used for training: "<<images.size()<<endl;
-    int train_width = images[0].cols;
-    int train_height = images[0].rows;
+    int train_width = 200;
+    int train_height = 200;
     Ptr<FaceRecognizer> model = FisherFaceRecognizer::create();
-    model->train(images, labels);
+    model->read("/home/paok/Documents/FaceRecognition/Trainer_auxfiles/fisherFace.xml");
     
     // Load Haar Cacade data for faces
     CascadeClassifier faces_haar;
@@ -92,7 +86,7 @@ int main(){
     // Create OpenCV frame object to store frame information
     Mat frame;
     // Create VideoCapture object, reading video device (USB camera)
-    VideoCapture camera(0);
+    VideoCapture camera(2);
     vector<Rect>facesID;
     // Check if the camera is readable
     if(!camera.isOpened()){

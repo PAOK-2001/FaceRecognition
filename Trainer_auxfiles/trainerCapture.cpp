@@ -28,9 +28,6 @@ void haar_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
         rectangle(frame,Point(cvRound(Instances[i].x*scale),cvRound(Instances[i].y*scale)),Point(cvRound((Instances[i].x +Instances[i].width)*scale),cvRound((Instances[i].y +Instances[i].height)*scale)), color,6);
         imshow("Detector", frame);
         imwrite("/home/paok/Documents/FaceRecognition/trainImages/"+folder+"/"+to_string(total)+".jpg",face);
-        if(total>=30){
-            return;
-        }
     }
 
     if (Instances.size()==0){
@@ -48,7 +45,7 @@ int main() {
     // Create OpenCV frame object to store frame information
     Mat frame;
     // Create VideoCapture object, reading video device (USB camera)
-    VideoCapture camera(2);
+    VideoCapture camera(0);
     vector<Rect>facesID;
     // Check if the camera is readable
     if(!camera.isOpened()){
@@ -64,7 +61,7 @@ int main() {
         }
         haar_detect(frame,faces_haar,facesID,1.5,total,folder);
         // Read key board input, setting esc as break key
-        if(waitKey(550)== 27 || total>=48){
+        if(waitKey(550)== 27 || total>=68){
             break;
         }
         cout<<"Faces registered "<<total<<"\n";
