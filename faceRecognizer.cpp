@@ -40,7 +40,7 @@ void trainerfromCSV(string src, vector<int>&labels, vector<Mat>&images){
     }
 }
 
-void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, double scale, Ptr<EigenFaceRecognizer> model, int modelwidth, int modelheigh){
+void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, double scale, Ptr<FaceRecognizer> model, int modelwidth, int modelheigh){
     Mat grayFrame;
     cvtColor(frame, grayFrame, COLOR_BGR2GRAY );
     equalizeHist( grayFrame, grayFrame );
@@ -56,10 +56,18 @@ void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
         Mat predict;
         resize(face, predict, Size(modelwidth, modelheigh), 1.0, 1.0, INTER_CUBIC);
         int id = model->predict(predict);
-        string prediction = format("Detected ID %d", id);
-        putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,0), 4);
-        rectangle(frame,realArea, red,6);
-        imshow("Detector", frame);
+        if(id!=0){
+            string prediction = format("Not target!");
+            putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,0,255), 4);
+            rectangle(frame,realArea, red,6);
+            imshow("Detector", frame);
+        }else{
+            string prediction = format("Hello Pablo!!!");
+            putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,0), 4);
+            rectangle(frame,realArea, Scalar(0,255,0),6);
+            imshow("Detector", frame);
+        }
+        
     }
 
     if (Instances.size()==0){
@@ -72,10 +80,10 @@ int main(){
     vector<int> labels;
     string src = "/home/paok/Documents/FaceRecognition/Trainer_auxfiles/data.csv";
     trainerfromCSV(src,labels,images);
-    cout<< images.size()<<endl;
+    cout<<"Images used for training: "<<images.size()<<endl;
     int train_width = images[0].cols;
     int train_height = images[0].rows;
-    Ptr<EigenFaceRecognizer> model = EigenFaceRecognizer::create();
+    Ptr<FaceRecognizer> model = FisherFaceRecognizer::create();
     model->train(images, labels);
     
     // Load Haar Cacade data for faces

@@ -18,7 +18,7 @@ for i in range(len(subjects)):
         #Convert it to gray scale
         image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
         #Resize to 168x192 like Yale library
-        image = cv.resize(image,(168,192))
+        image = cv.resize(image,(200,200))
         cv.imwrite(path, image)
 
 
