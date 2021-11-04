@@ -19,3 +19,6 @@ For training the FisherFace model, I created training utilities that simply and 
 ## FaceIdentifier
 
 This is the main script, it reads the trained model from "fisherFace.xml", then it uses HaarCascade classifier to detect the faces in a given shot, it then applies the FisherFaceRecognizer, if it detects the specified key it displays a green box and displays a welcome message.
+
+![Demo image](demo.jpg?raw=true "Demo of face-identifier")
+

@@ -56,15 +56,16 @@ void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
         Mat predict;
         resize(face, predict, Size(modelwidth, modelheigh), 1.0, 1.0, INTER_CUBIC);
         int id = model->predict(predict);
-        if(id!=2){
-            string prediction = format("Not target!");
-            putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,0,255), 4);
-            rectangle(frame,realArea, red,6);
-            imshow("Detector", frame);
-        }else{
-            string prediction = format("Hello Brandonk!!!");
-            putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,0), 4);
+        if(id==2 || id==0){
+            string prediction = format("Welcome!!");
+            putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,0), 3);
             rectangle(frame,realArea, Scalar(0,255,0),6);
+            imshow("Detector", frame);
+            
+        }else{
+            string prediction = format("Not target!");
+            putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,0,255), 3);
+            rectangle(frame,realArea, red,6);
             imshow("Detector", frame);
         }
         

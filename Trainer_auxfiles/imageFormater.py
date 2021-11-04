@@ -13,6 +13,7 @@ for i in range(len(subjects)):
     pictures = listdir("/home/paok/Documents/FaceRecognition/trainImages/"+subjects[i])
     for pic in pictures:
         path = "/home/paok/Documents/FaceRecognition/trainImages/"+subjects[i]+"/"+pic
+        #print(path)
         #Open image in direcotry
         image = cv.imread(path)
         #Convert it to gray scale
