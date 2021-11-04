@@ -14,48 +14,31 @@ using namespace cv::face;
 using namespace std;
 
 Scalar red = Scalar(0,0,255);
-//trainerfromCSV
-//input: src (string with direction of CSV file), labels, images (vectors passed by reference)
-// A function that reads the paths stored in a CSV file and stores said images in a Mat vector.
-void trainerfromCSV(string src, vector<int>&labels, vector<Mat>&images){
-    ifstream CSV(src);
-    if(!CSV){
-        cout<<"Not a valid CSV file!"<<endl;
-    }else{
-        string line, path, label;
-        while (getline(CSV,line)){
-            stringstream liness(line);
-            //get image path from CSV
-            getline(liness,path,';');
-            // get ID of face
-            getline(liness,label);
-            // If information read, right to vector
-            if(!path.empty()&& !label.empty()){
-                // read image from path and store in vector
-                images.push_back(imread(path,0));
-                // store image ID as int
-                labels.push_back(atoi(label.c_str()));
-            }   
-        }
-    }
-}
 
+//face_detect
+// Description: given a frame, performes a face detection usign the HaarCascade Clasifier. Of the faces detected uses FisherFaceRecognizer to predict ID from database
+// and determine if person is the desired individual
 void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, double scale, Ptr<FaceRecognizer> model, int modelwidth, int modelheigh){
     Mat grayFrame;
+    // Convrt frame to gray scale
     cvtColor(frame, grayFrame, COLOR_BGR2GRAY );
     equalizeHist( grayFrame, grayFrame );
+    // Resize according to specified scale, to improve HaarCascade face recognition
     resize(grayFrame, grayFrame,Size(grayFrame.size().width /scale,grayFrame.size().height /scale));
+    // Detected the perimiter of a faces in frame as a rectangle and store it in Instances
     target.detectMultiScale(grayFrame, Instances,1.1,3,0,Size(25,25));
     
-
+    // Iterate through detected face perimiter
     for (int i = 0; i < Instances.size(); i++){
         Rect realArea = Rect(cvRound(Instances[i].x*scale),cvRound(Instances[i].y*scale),cvRound(Instances[i].width*scale),cvRound(Instances[i].height*scale));
         //crop the face
         Mat face = grayFrame(Instances[i]);
-        //Resize the image to training images size (necessaty when using Eigen or Fisher faces)
+        //Resize the image to training images size (necessary when using Eigen or Fisher faces)
         Mat predict;
         resize(face, predict, Size(modelwidth, modelheigh), 1.0, 1.0, INTER_CUBIC);
+        // Get preddicted ID from FisherFaceRecognition
         int id = model->predict(predict);
+        // Check if it is desired individual
         if(id==2 || id==0){
             string prediction = format("Welcome!!");
             putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,0), 3);
@@ -67,18 +50,21 @@ void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
             putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,0,255), 3);
             rectangle(frame,realArea, red,6);
             imshow("Detector", frame);
-        }
-        
+        }   
     }
-
+    // Show frame even if there is no faces to show user camera feed.
     if (Instances.size()==0){
         imshow("Detector",frame);
     }
 }
+
 int main(){
+    // Define training image dimensions
     int train_width = 200;
     int train_height = 200;
+    // Create recognition model
     Ptr<FaceRecognizer> model = FisherFaceRecognizer::create();
+    // Read pretrained model from .XML
     model->read("/home/paok/Documents/FaceRecognition/Trainer_auxfiles/fisherFace.xml");
     
     // Load Haar Cacade data for faces
@@ -101,7 +87,8 @@ int main(){
             cout<<"NULL frame ";
             break;
         }
-        face_detect(frame,faces_haar,facesID,1.8,model,train_width,train_height);
+        //Run face recognition function
+        face_detect(frame,faces_haar,facesID,1.5,model,train_width,train_height);
         // Read key board input, setting esc as break key
         if(waitKey(5)== 27){
             break;
