@@ -44,12 +44,13 @@ int main(){
     // create the vectors to train model
     vector<Mat> images;
     vector<int> labels;
+    // Source of training data
     string src = "/home/paok/Documents/FaceRecognition/Trainer_auxfiles/data.csv";
+    // Create image and labels vector from data in src
     trainerfromCSV(src,labels,images);
     cout<<"Images used for training: "<<images.size()<<endl;
-    int train_width = images[0].cols;
-    int train_height = images[0].rows;
     Ptr<FaceRecognizer> model = FisherFaceRecognizer::create();
+    // Train and save model
     model->train(images, labels);
     model->save("fisherFace.xml");
 

@@ -14,5 +14,6 @@ for i in range(len(subjects)):
         # Format text for CSV file: directory/target/file_name/#number
         # sample: /home/paok/Documents/FaceRecognition/trainImages/target/IMG2.jpg;0
         out_put = img_directory+"/"+subjects[i]+"/"+pic+";"+subjects[i]
+        # Write output to CSV file
         csv_file.write(out_put)
         csv_file.write("\n")
