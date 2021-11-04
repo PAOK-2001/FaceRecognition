@@ -7,6 +7,8 @@ A proyect that impements the FisherFace class of the openCV library to determine
 To train the FisherFace models, we must supply an image database wich contains the faces of different people, each subject will have it own folder and corresponding key, the FisherFaceRecognizer will try to match the detected face with one of the keys in the database, because of this a varied database improves chances of a unique detection.
 Because of this, the repo has a imageTrain directory which stores the folders of the different subjects (where the foldername will be the subject key), it is best practice to have the same amount of picture of each subject, giving priority to the key subjects to detect.
 
+![File System](files.png?raw=true "Example of a training image file system")
+
 ## Training Utilities
 
 For training the FisherFace model, I created training utilities that simply and streamline the process:
