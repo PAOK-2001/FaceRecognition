@@ -14,9 +14,9 @@ using namespace cv::face;
 using namespace std;
 
 Scalar red = Scalar(0,0,255);
-
+int contador = 0;
 //face_detect
-// Description: given a frame, performes a face detection usign the HaarCascade Clasifier. Of the faces detected uses FisherFaceRecognizer to predict ID from database
+// Description: given a frame, performes a face detection usign the HaarCascade Clasifier. Of the faces detected uses LBPHRecognizer to predict ID from database
 // and determine if person is the desired individual
 void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, double scale, Ptr<FaceRecognizer> model, int modelwidth, int modelheigh){
     Mat grayFrame;
@@ -26,26 +26,42 @@ void face_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
     // Resize according to specified scale, to improve HaarCascade face recognition
     resize(grayFrame, grayFrame,Size(grayFrame.size().width /scale,grayFrame.size().height /scale));
     // Detected the perimiter of a faces in frame as a rectangle and store it in Instances
-    target.detectMultiScale(grayFrame, Instances,1.1,3,0,Size(25,25));
+    target.detectMultiScale(grayFrame, Instances,1.1,3,0,Size(145,145));
     
     // Iterate through detected face perimiter
     for (int i = 0; i < Instances.size(); i++){
         Rect realArea = Rect(cvRound(Instances[i].x*scale),cvRound(Instances[i].y*scale),cvRound(Instances[i].width*scale),cvRound(Instances[i].height*scale));
         //crop the face
         Mat face = grayFrame(Instances[i]);
+        // Adjust face contrast by a factor of 1.5
+        face = 1.2*face;
+        // Apply filtering
+        Mat filtered;
+        bilateralFilter(face,filtered,2,15,15);
+        //Apply histogram equalization
+        equalizeHist(filtered, filtered);
         //Resize the image to training images size (necessary when using Eigen or Fisher faces)
-        Mat predict;
-        resize(face, predict, Size(modelwidth, modelheigh), 1.0, 1.0, INTER_CUBIC);
-        // Get preddicted ID from FisherFaceRecognition
-        int id = model->predict(predict);
+        //resize(face, face, Size(modelwidth, modelheigh), 1.0, 1.0, INTER_CUBIC);
+        // Get preddicted ID from LBPH Method
+        int id = model->predict(face);
+        // Contador
         // Check if it is desired individual
-        if(id==2 || id==0){
-            string prediction = format("Welcome!!");
-            putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,0), 3);
-            rectangle(frame,realArea, Scalar(0,255,0),6);
-            imshow("Detector", frame);
+        if(id==2||id==0){
+            contador++;
+            if(contador >=10){
+                string prediction = format("Welcome!!");
+                putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,0), 3);
+                rectangle(frame,realArea, Scalar(0,255,0),6);
+                imshow("Detector", frame);
+            }else{
+                string prediction = format("Determining");
+                putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(100,100,0), 3);
+                rectangle(frame,realArea, Scalar(100,100,0),6);
+                imshow("Detector", frame);
+            }
             
         }else{
+            contador = 0;
             string prediction = format("Not target!");
             putText(frame,prediction,Point(realArea.x -10,realArea.y-20),FONT_HERSHEY_PLAIN, 1.0, Scalar(0,0,255), 3);
             rectangle(frame,realArea, red,6);
@@ -63,9 +79,9 @@ int main(){
     int train_width = 200;
     int train_height = 200;
     // Create recognition model
-    Ptr<FaceRecognizer> model = FisherFaceRecognizer::create();
+    Ptr<FaceRecognizer> model = LBPHFaceRecognizer::create();
     // Read pretrained model from .XML
-    model->read("/home/paok/Documents/FaceRecognition/Trainer_auxfiles/fisherFace.xml");
+    model->read("/home/paok/Documents/FaceRecognition/Trainer_auxfiles/faceModel.xml");
     
     // Load Haar Cacade data for faces
     CascadeClassifier faces_haar;
@@ -73,7 +89,7 @@ int main(){
     // Create OpenCV frame object to store frame information
     Mat frame;
     // Create VideoCapture object, reading video device (USB camera)
-    VideoCapture camera(2);
+    VideoCapture camera(0);
     vector<Rect>facesID;
     // Check if the camera is readable
     if(!camera.isOpened()){

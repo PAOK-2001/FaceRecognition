@@ -21,7 +21,7 @@ void haar_detect(Mat frame, CascadeClassifier target, vector<Rect>& Instances, d
     equalizeHist( grayFrame, grayFrame );
     resize(grayFrame, grayFrame,Size(grayFrame.size().width /scale,grayFrame.size().height /scale));
     // Detected the perimiter of a faces in frame as a rectangle ans store it in Instances
-    target.detectMultiScale(grayFrame, Instances,1.1,3,0,Size(25,25));
+    target.detectMultiScale(grayFrame, Instances,1.1,3,0,Size(145,145));
     Scalar color = Scalar(0,0,255);
     // Iterate instances
     for (int i = 0; i < Instances.size(); i++){
@@ -54,7 +54,7 @@ int main() {
     // Create OpenCV frame object to store frame information
     Mat frame;
     // Create VideoCapture object, reading video device (USB camera)
-    VideoCapture camera(2);
+    VideoCapture camera(0);
     vector<Rect>facesID;
     // Check if the camera is readable
     if(!camera.isOpened()){

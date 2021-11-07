@@ -49,9 +49,9 @@ int main(){
     // Create image and labels vector from data in src
     trainerfromCSV(src,labels,images);
     cout<<"Images used for training: "<<images.size()<<endl;
-    Ptr<FaceRecognizer> model = FisherFaceRecognizer::create();
+    Ptr<FaceRecognizer> model = LBPHFaceRecognizer::create();
     // Train and save model
     model->train(images, labels);
-    model->save("fisherFace.xml");
+    model->save("faceModel.xml");
 
 }
